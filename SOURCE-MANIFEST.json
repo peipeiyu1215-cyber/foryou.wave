@@ -1,51 +1,10 @@
 {
-  "artwork": "為你好 · 比較",
+  "title": "為你好 · 比較｜容器浮沉版",
   "entry": "index.html",
-  "alternateEntry": "compare.html",
-  "sourceEntry": "compare.html",
-  "sourceEntrySha256": "33735b60ba8d3aa279efc7a42b2591a28ed97e7309aaeca47c063b0b41f44d38",
-  "excluded": [
-    "倒影/index.html（跳轉頁）",
-    "倒影/compare.html（跳轉頁）",
-    "index.html（戀愛泡泡入口）",
-    "其他情境、舊程式、開發工具與本機測試資料"
-  ],
-  "files": [
-    {
-      "source": "love.css",
-      "destination": "comparison.css",
-      "bytes": 1914,
-      "sha256": "301f73907089735f115dcf7e7cd395cec6f0ff720d444812b7a4ffffb09a11e0"
-    },
-    {
-      "source": "comparison-handwriting.js",
-      "destination": "comparison-handwriting.js",
-      "bytes": 14926,
-      "sha256": "2f625927e8de505fe8655f18ec8d50126d831f297fa9ee9ca33ebb91f9064cbc"
-    },
-    {
-      "source": "comparison-sea-reference.js",
-      "destination": "comparison-sea-reference.js",
-      "bytes": 31013,
-      "sha256": "4ddf98b8ea4bcd3add664221e6bd1963f235d2092bca985955cdcf228cd00bd2"
-    },
-    {
-      "source": "comparison-strokes.js",
-      "destination": "comparison-strokes.js",
-      "bytes": 950,
-      "sha256": "0a3dae544280b17d2d944cc6fe7242df77a035a99906f57debc7aeb754e0b55a"
-    },
-    {
-      "source": "comparison-waves.js",
-      "destination": "comparison-waves.js",
-      "bytes": 11023,
-      "sha256": "9f18324cc24d515ff2be58cff52f49c5d083c0cf93daefa9666519a95dc03340"
-    },
-    {
-      "source": "comparison.js",
-      "destination": "comparison.js",
-      "bytes": 7443,
-      "sha256": "a770ba0bb11f767800af2cfa729eeb407b51847db32a063e377d938c9ebfedb5"
-    }
-  ]
+  "source": "比較-容器浮沉版.html",
+  "bytes": 41208,
+  "sha256": "56e18c65eab8c730fb310527c405283154eeaf5d4bc7cba48cef900cf83b7a69",
+  "standalone": true,
+  "externalAssets": [],
+  "notes": "直接複製目前最新的容器浮沉版；保留回浪吐字、淺倒影、手機旋轉及角度控制。"
 }
