@@ -1,9 +1,17 @@
 <!doctype html>
 <html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#000000"><link rel="icon" href="data:,"><style>*{box-sizing:border-box}html,body{margin:0;background:#000;color:#eee;height:100%;font-family:system-ui,-apple-system,sans-serif}body{height:100svh;display:flex;flex-direction:column;overflow:hidden}header{display:flex;justify-content:space-between;align-items:center;padding:24px 24px 0;font-size:11px;letter-spacing:.22em;color:#888}header strong{font-size:16px;color:#eee;font-weight:400}main{position:relative;flex:1;min-height:160px}canvas{display:block;width:100%;height:100%;touch-action:none;cursor:grab}canvas:active{cursor:grabbing}.hint{position:absolute;bottom:12px;left:0;width:100%;text-align:center;color:#666;font-size:10px;letter-spacing:.18em;pointer-events:none}footer{margin:0 auto;width:min(100%,560px);padding:8px 24px max(20px,env(safe-area-inset-bottom));font-size:11px}.angle-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;letter-spacing:.12em;color:#888}output{color:white;font-size:24px;font-weight:200;font-variant-numeric:tabular-nums;letter-spacing:0}input{width:100%;accent-color:#eee;height:16px}.ticks{display:flex;justify-content:space-between;color:#555;font-size:9px;margin:4px 0 20px}nav{display:flex;gap:8px;flex-wrap:wrap}button{background:#090909;color:#bbb;border:1px solid #333;border-radius:30px;padding:10px 13px;font:inherit;cursor:pointer}button:hover,button[aria-pressed=true]{color:#000;background:white;border-color:white}#sensor{flex:1;color:white}#status{color:#777;line-height:1.6;min-height:32px;margin:13px 0 0;font-size:10px}body.immersive header,body.immersive footer,body.immersive .hint{display:none}#restore{display:none;position:fixed;bottom:20px;right:20px}body.immersive #restore{display:block}@media(min-width:700px){header{padding:30px 40px 0}footer{padding-bottom:25px}}@media(max-height:600px){header{padding-top:10px}.ticks{margin-bottom:8px}footer{padding-bottom:8px}#status{min-height:16px;margin-top:7px}}
 
-.hint{color:#929292}main{min-height:180px}</style><title>為你好 · 比較｜容器浮沉版</title><meta name="description" content="轉動手機，聽見『你看看別人』背後的另一句話。"></head><body>
-<header><strong>為你好</strong><span>比較 / 容器浮沉</span></header>
-<main><canvas id="stage" aria-label="透明容器中的水隨重力流動，手寫字先沉沒再浮出，兩句都有同步倒影。"></canvas><div class="hint">轉動容器，讓水托起另一句話</div></main>
+
+html,body{height:100%;overscroll-behavior:none}body{height:100dvh}
+main{position:fixed;inset:0;min-height:0}canvas{width:100%;height:100%;border:0}
+header{position:fixed;inset:0 0 auto;z-index:2;padding:calc(14px + env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) 0 max(20px,env(safe-area-inset-left));pointer-events:none}
+footer{position:fixed;bottom:0;left:50%;transform:translateX(-50%);z-index:3;margin:0;width:min(100%,560px);padding:8px max(16px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));background:none}
+header,footer,.hint{text-shadow:0 1px 3px #000}.angle-row{color:#ddd}.ticks{color:#bbb}#status{color:#ccc}button{background:rgba(0,0,0,.6)}
+.hint{position:fixed;top:calc(58px + env(safe-area-inset-top));bottom:auto;z-index:2;color:#bbb}
+@media(max-height:500px){header{padding-top:calc(7px + env(safe-area-inset-top))}.hint{top:calc(34px + env(safe-area-inset-top))}footer{padding-top:3px;padding-bottom:max(6px,env(safe-area-inset-bottom))}.angle-row{margin-bottom:2px}output{font-size:16px}input{height:12px}.ticks{margin:0 0 4px}nav{gap:4px}button{padding:6px 9px;font-size:10px}#status{font-size:9px;line-height:1.2;min-height:11px;margin:3px 0 0}}
+</style><title>為你好 · 比較｜滿版水面</title><meta name="description" content="轉動手機，聽見『你看看別人』背後的另一句話。"></head><body>
+<header><strong>為你好</strong><span>比較 / 滿版水面</span></header>
+<main><canvas id="stage" aria-label="螢幕四邊是盛水容器壁，水隨重力流向低處，兩句手寫字與倒影由同一條浪面逐步遮擋及露出。"></canvas><div class="hint">慢慢轉動，讓海浪托起另一句話</div></main>
 <footer><div class="angle-row"><span>旋轉，聽見另一面</span><output id="degree" aria-live="off">0.0°</output></div><input id="angle" aria-label="旋轉角度" type="range" min="0" max="360" step="0.1" value="0"><div class="ticks"><span>0°</span><span>90°</span><span>180°</span><span>270°</span><span>360°</span></div><nav><button id="sensor" aria-pressed="false">啟用手機旋轉</button><button id="play" aria-pressed="false">播放預覽</button><button id="reset">重置</button><button id="calibrate">校正 0°</button><button id="fullscreen">全螢幕</button></nav><p id="status" role="status">拖曳畫面或滑動角度，探索文字的另一面。</p></footer><button id="restore">返回操作</button>
 <script>// Original pen masks extracted from 倒影/旋轉海浪的比較.png.
 window.comparisonHandwriting=["data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADYAAAAtCAYAAADlVJiFAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAARiSURBVGhD3Zpb6GZTGManRMIkM25kzI0cShpKTGbUODQKicgN4Ro3cqOUxiFTTNMoZhIN5RDKIWQukMOFXJhBzjmEnM/kNAavnr/1/nu/533W3mt95kt56jffzPM8a+/9nfZae3+zwMwWmNlr5fF/A/541MxO4mBGHG5m5wp/p5OMGfOs/aMvzGxfke80kjFj3jCzz8uTm+nHPxkz5KjyhP4qjweIzhj7mdklZnawyCZIxhScYGabhc9cXp7Qz2b2qcjHeKiMj+LOPMmYgh1lJ1vMbA+RO4+EA3pO5DUeDuNY20R/jmRMAfR9ebxe5M5X4YAuFHnkzNAdEno8do5kdLKadsR5JGqZyMEq6rnwvbqDPHw0efw8yejkm7Cj9SJ3Tg49iHPwFHWgdSE/lTIeP0EyOmndEeYt19nBvyX4Lnyndhfb+Ch0bhP5BMno4L6wI3zHOI9E4d9LyHMtFWPBMSX37/K1ojNBMjqIukjkztXU/ZL+DR0rxtX2davIE8lo5HjaGeeRIa0QfWZ/M/up9LeKXJKMRn4IB/egyCNRmPPeLasQ7tX4o4x9S2RVktHA6WVHv5RHziM3lQ70vsjBeWa2oaz8OQPfNuwnkYwGoq4Tea3LmfNM6PA7iYUylmCHinGDJGOEa8JBQJxHbgw9vLucO3uH3mfBv7R4N4sxoyRjhKiDRF7rcsbUunjS3G0iGQNcNnAADFYhrpbTcxRnU5GMAVgviI7zcek8ITLmHNru2CehiWRUwGWGElYE3AVHlpx9xcLS3V4e8cngTjfJEFxQdqj0pOhPQ9TrIj9OeIMkQxB1T5jHoDdFfxowabt43XlWyO4SYyXJIDDbR8HDMoi9f4tPwrVtxicO4dYCrt24N08yArwexAoBflzU/i7G1cBCea3wwdNle3+WR85BTXLyTkZlQ78FP57FxtaJkZfLdZk6U34Stglx7tT0AHd5oINVdBTnQ1kNTAF4Z9Rilq+eOY/UNPGC8SBwWiniXYI2iU5Uy7yDO1jQd2a2q8h5m5wxPv3gRIMrBtyIxW0K3Hec6/AAcHHYwSsiB/5dgDhT/Ghmr5rZeyJzolaKnDmldD8wszVm9k7MuRzByYM9J2oXkUduLz28GDeIHBxI26y9oMwZZnZ++fvRMePiVWKwAqvwoTNYBHpppLtXyV0fik4XyWjE7/5CR4jcwQIY8h8iOI9EXSnyLpLRSLyre6LIHcgn13tFzl3XYyLvIhmNRNUuBP3sCj0ucobFeRfJaOTXcAC16y3c4+g5SNYhotNMMhrYhw7gedEB+B5iRbGbyBQszrtIRiNRdw7kWG1w5hxWGePifhfJaMQXrdBGkQP8aM+eg18zobfLDxaYXFk8potkNOJLJOgKkbeCqwOl1gm6SjIa8ct4aOidaeHrsC3X/aLXRTIaiVKXIT28GLblL9hy0esiGY1EYRHKeQ+LaXu1s2wXyWjk7nAg+PGO82lYVD6Wo//VoYVkdODaU2T/OX8DXrFO4c9zTwcAAAAASUVORK5CYII=","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAA4CAYAAAC7UXvqAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAVMSURBVGhD1ZppyG5TFMcv+YCukqHcK0PkC0V8I1cSCSVDMoREJKSLa/hCRJEhkUgSH0SmhDKPKWNSMs9Dmck889eftZ7W+a91znPO85xXvf/6dd/3v9faZ7/Ps88+a+9zlwBY8j+zPoCHAXwKYO+ifRDJWGA+xn/6GsB9AL4vYgaRjAXiYBt41Hf2r8YOIhkLwM1h0H+En68vYgeTjJGp9DOALYvYmUjGSKzUUZuuK2LnIhlzcoGO2PRsETsKyZiDp3TUtlxq3KgkYyBrAHhaRw3gDQC/Adi9yBmVZAzgUR01gGut7eLgXVTkjkYyenBYGJzrTwBbh5j4x31U9EEYz5uaT2Zt600yOtg8DIp6DcDlANYsYr8E8LvF3Rl8/vye+T/Yv08W+b1JRgen2gWvKtqUqPcB3AjgL/vdy4lPABxb5A4iGSPhg+XUivoJwIUAVityZiIZc8IH2D0yaE6VzwAcX8TPTTJm5F4ZNO8BisupxvZlbQBnATioaJuQjIE8IwN/xep815lFThe3WB6nWhTvG439l2T0YCmAd62Wj/IC7W8Av5i3a5EfYc5DAO4AcLf0p1pW5A/+A7imfw7gW4MbkxWhfZ9wQc59zSdnhJhK/BZvBXAcgL2K/AbJmAIH/RyABwGsV7T/GAZybvB3BvB8aIviB/KyrU6bFX12kow50Acd523XtLgCwCZFP4NIxhwcqCMs9CaAbYvcmUnGDPDm4lKnK0cUizvNG4VkDGBTW+fbdJLFaF4bNwA4pPA7SUYP9teRFtKcNtay2spLD9cJRWxJMjrYUy7i8jXfB/FFkausC+Dq0Afl1amLm3/NSySjYCvp2HWNte8kftd8PxnAixJP3WSfuopVrPbRIBmBbeyJq4r1PbkttL1V9LM6gCdCTBT9jUKsiqWK9tdAjY21hyDelBqvFz1a2h6TdoqD2q3oR/uiHihiGqjBJ6bqKE0K8HQtiisJ5zJP4y6RtsuKfOVDyTmmiGmQDIOf3JWFr6higccd3DkADijy2ngp5FNTc5MxgMflYhwwVyBflbYvciKsak+zAtA9XZlOL/IaJKMnvDGjfO7HFWaPIo9sYNWmihuYeBxDVYtCg2T0xDfmLvfvCp6WwvzEXw3tKt5/3ABFTX1/kIwe8JOKimt1nFb+DXBlez34Lh5F8lgmblSOlBiW73r9BsnoAQccFdvi+ejtAE4Mv7vuL/p0dGryfYLGNEjGFJbLBVhCx/ZK3GLy/LRt7VdU+xYxE5IxhSg+pbWdX3kUn+Yao/BeiVWry5fkzuOYZHSgpbO2E57/uF4o2iOnhFiKy/B24lGa1yAZLewinXL/qjEkHrVXS+AOdoId5WeoPGbkFOWU42GBS/tokIwWoroOq1gCR7m/BYCvpM3FSrTtWpReo0EyCvg0dHGV0fYIi6+o/WypVHV9CJSfbvDb0PYGyShw9XktyvqJ+jXkRfFbqI7jq+u5WG5ozIRkCHwH4NK2ivh2kq+YdgRwtqGxbbj8W/CNU0kyArEu6fsWhYdeLr6J1/YuDgfwTch3VQdoE5Jh8HTAFY8Op/GOfXI8gqS0XTmi5SVhFGsozZuQjFCPcLunbdOI4hG7thP2z0HzBu0jblm1jwlqvG1JfR/7yiPhdIGncO6v07KZd/EJzikUq1l/u9P5X3LUYNXIkwP1+8J9s4vPBG5q9MHl4nTjAcGG0kfU1BeAyZiTVVbD8IOojho5bTqLMwDnh3h9yCWSMSf+JpOb8w9s+TwPwKVFbBeH9j2dS8YIeBXJ9wHaNjrJGAm+ZeENqf7oJGOxkYzFRjIWG/8AfF/lF2skTsgAAAAASUVORK5CYII=","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAAwCAYAAACMuVOlAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQpSURBVFhHzZlbyGZTGMenkJKaJCmEEBFySmlcCalx4UI53DoUcSMhF0SkaRCRmYtpbgxyupARmkEuROR8KCHHxilGjPPhp/+0lv49z7P37PfzXrz/+r3ffv/PetZa3/72Xs/a+1sGLJuB3YHbGNazwC1F3v8iGQMcBrwUZ2S6uciZG8ko+CzOqOlq4Jp2/Biwc5E7F5JhvBkm9SmwETjW2hwS2sQ+5kIyAncCRxV+57o2ue+BT4r4mcDjwOoiNplkzMgqO4tvAGcBr5vnirmTScaMSH8B24DvwqSkF4AHgKuK3MkkYwInA7cDP8YZtcluBi4u8pZMMga4EfggTOhP4Ddga/t+U5E3F5JhPAG8Z5PourvFXw1+zJ/CvsANwP5F7D+S0djTBtdStA5YHtp83P680oVFHxUHAkcC64G3bQzpvqL9dpIxEQ3mivG97fhW4IvQvusb4CH7fnjR15InuQb4G/ihLfKalBb2u4DnbNAx/W7HTwErinG2k4yJ+AC/2rHrZ+An4F3gHeDKdtcfUPQ3SjJ2wFqbxJd27NLNpjMac5dMMgLnAc/EWZi0DKnkrWzbuJg/F5LRUIXod26lLe2n7tSYO3f0cRJwcFtGXgmT6XoEOK1dX67UYYEqlPK7LinajKKPIW0ATg8JrrG18exWDIakazauu4PoQ7W2S8vHEbFRY5O105mJ8T2AJ62NS5eO1kr99AoW+yjpB4fGQIHrGPMPCrEu7Y4eBXaztn3p6stWHKMkGQO8ZoNLmpgmqt2QSxuOC4r8jtZOV4yXJGMA10XAPfZdv8AJRU6F6rUqlaQ9QYyXJKPgH5vQh83zMxvbj+EbY10KMV6SjMAZ1qnU/R1NUmf7eWtzf3uaVHns0s4q5pUkI+C63HwfrHvaIMRr16Vr1bdn1YNbSTIMddL1S4j1FwXye/WppFq/i+U9bLGnizFLktG4wzqTYvzzEHfpWju6yBF+Cajex3hJMtpW3hXjwp93Jg8WNrjnFPGSZFgn0lD18W1ajI3hmxaV3RgviYaWmC5VhRjvvGztYkxc0dbS3u5eYFfgW8t7scgr8S+6+6S3gEtjw8BHNlh/ntmneLjq0g1zXPB0VmO/Jf1gp5aoepsaFei55o/2guDrMHiXNiT7hTzXzH9uSc8jqcEAX7UcTVRSzdaS9SCwV9Hex+m6voiX6EMP+dr7peAIeinVNwsxNobrlCJekoyJeD2PsTFc5xbxkmRMRE+EulNVbWKso52R1kXdZHpgi7q2yClJxkR6jY7l8sSwPI1JN1zstyQZE+k1W8vV+e09jl8CLj0u6I3H+8HX43LstyQZE9G+UIPrpdWQ9B8JvfjyvK6ZXh4kYwYkrat6daKb4FTg+KKd0/9bEf1RkjEDqiCXFf7cScYikoxFJBmLSDIWkWQsIslYRP4FjcjWsKrT75oAAAAASUVORK5CYII=","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAC0AAAAtCAYAAAA6GuKaAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAPoSURBVGhD1ZhPyBVlGMU1QgoyIgKthQsjPtJapEiEuTCICjetEkzMhKACa9EmpXJTgVGtKkgQKlsUKYgShKJEFFRY6UZMNEgM/1T+LyurEwfmeTlz7jNzZz4/zHvgx3fvc8773Lnz3XnnfWcSgEmjxkBhFBgojAIDhQniuqQ2YQwULpLnUderSaYLJ6vxdwGY6r6H+3IHgI8B7LaD/VteP5CMG8YzAH4BcKjqUTtwDzdBPV69ngbgFTko1TYA6632XNJvGFdYD/YtvoczrrcGrn0A7rUxKu/XFdUm9TyYcZU1oP5sOYO3WNb9rqjWqefBJlRNBxu8JtkVid8V1SL1PNgEL4qQe85ZyT6S+F1RLVHPg018JA1mJL5yTLLu9UH1nnoebGKDNPg68QO96pclfh9UZ9TzYBN3WxP3yU0AfpXM8iSj1A4kQfWbeh5s4mppcNo83jw+Fz/0V9JHoTjO64FeG1TxPNhGiN/6fgBvSS3ED/oGwFMApic9lFMAjgB4IfHIHun7o3oebKNNuwDcl4xpQ+Ue4ZcKcfYqngfbOCBNXAuS/DDOVWPfTDzynfQ/qJ4H23hRmkyuaqEvk3wbXP2FuDhynxyXzF71PDiMLwAslfcqz7bxtJxp/v7dJ3pv4O+7eB7sw5PS9HWpTwEwB8A7vmYwQh8mHrlHMuOapzNUXDpyNbjD6hTX2z5Wxy9MPMIvH+KsVDwP9qGPVtrYO8XzvsHtkqnlPNiFawG8bw1D26vMg1Z/2XrcLJ73Dx6STC3nwSZmAtgJ4IQ1orYk+Vst4/48AOcr74bEJ5wK0x4edHhG/XZK/VP9bZrqdErLLrTZ4rsXvCSZWs6DyiwZwNvo5mq3ze1ViBeejyP6RecmPnkjqSlbpQdVPA86PKi1Vtsvja5MxhCK01Rtfu3Jp/I5VPE8OAzuyEMbE5/ob3HYSq8Nzjiq4nlwGGkT4/tq43sYwGeJ3xXukEL/qufBNr6VJmsSP1CNJX5XHrVexfNgE3p3qjUw+PyD+inZLPQlFmgxUxXPg03w3xPidOV+wCVk6LHE78Mn0osqngczdFPLRu4H3BNS3LnUPmSccD0T4t6zeB503pWBR82LGwhvybGWuFA9QqhdOB3gUyyv6TXEZWzxPKg8IYMo98kHlcepjWfj5+o9N8KebSPufm8DuK16FPF7VQuVvA8O5jcNSOCZ5YUXWpxkuvCs9MhUsj6QcAGjGvZEaVWVa1qH9IF7zSaVnA+6UUJ/ALgmaZzB5arXxgvn9kwlo+HVEuBrb3Yp4QMgVW361CD1VdLg/4I/N+oH9zx4ufFwUrvsDzploDAKDBRGgLH/AMxRXVgaOe3VAAAAAElFTkSuQmCC","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAAnCAYAAACSamGGAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIbSURBVFhHzZg/S1xBFMX9AhZa2KSUiJ2CbbCxCkIUG+1s1SIIgpIqWokIFvY24hfwzzewUUwghYUkjYghIhYi8S/qkQvz4HLPdd+MO+6+Az9295yZeXfnzbz3dlsAtFQdMqoIGYkMAfjk+FkhI5FCC06WDTISOQXwKxT63cmzQEYiV2o2J5w8C2QksqWK/ODkWSAjkR1VZL+TZ4GMRPYB/AbwCOCjk2eBjERER1U+3e2hONnhe06eDTISKbTmZNkgI4FZAP8B/AMw5+TZICOBWzWT73aNFMhIQCTrUdTm5NkgI5IuNYuXTp4VMiKZVEXKXcfmWSEjkhNVpLy3eVbIiMTTMYBep23dkBFBjylu23z+4fSpCzIi2DVFFb7VlNP3TZARgZbct3Umsyj6q9p8ccZIgowSxsKBn8OrzYVVVaDckUTXAFqdtlGQUcJPVcCmkxd0qnZa8ljX4bSvCRklnKtZ7HNyy70pspCMsei0dyGjBivmQDZ/jWHTz+qwbCmQUQMtWXc2L2PajGH1B8BXAPMAlsNTv1zeooscV4PJzrV5CjdqLLnvPwF4CEtDNpjWhvSxA7yGXBvPQscc/1ism2JE8uWLn8hLur3t7DGjBpIFb/N66AYwCuBbGP/OaRNVpNaIk787ZBguVIG5ZzEaMhSfVYEimzcMMhRaTTnNBWQERAdh0ww4eUMhI1xqBh2/aZBRRcioImRUkRec9WBNTr1FywAAAABJRU5ErkJggg==","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAApCAYAAABHomvIAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAQ4SURBVFhHrZhbqFVlFIWPYmQPiWWoBEpeUEGwHjJvoUeSUjDIy4MiWBFC9FQPKQUKIipCSBkJEvWmiZWkvtiDinhBEbEUgzRLlEwysdK8pDljHObcjDX++XP2iQZ8e+09x/j/tfc5a/2X1WFmHf8Tz1lT6gdPm9lVyUL/mNnf/r5v5LVxjRfN7GxSZ16gk32X+GA2ZUKvm9kKM7tjZvfMbCe30Q5qfOGdnUm8YBWddFvi7yUf+pO8RVSfyO20kxq7zeyKd/BY4oMP6CSTqD7NzG6SB70vbY+Y2Q33Gv3qSWqw1AvwF9FMfOm7fjyZtIv+/5C2XWiwRujnxAOP+vUT2mRm39Jn6M2kHZhAP2Cm+hrO4H/dnsQH6ymTSfPMJc98lnhtfcHoAFqY+GC7+7gTWbuSrHLLs1rvoigksNTLMqHOJKe869lPEq+LoiDMk5OqH7BeFW8yeXMq7bS/FkVBwLgXwlioPlhJmY8Tvzf5mEHYw/Ci+QZFQWDhTlUf/ESZcYkPzlNmSOJXKQrEEuoUUj8IXUu8YAfl3kv8KkWBOEqdfpn4YC5l1iV+8BblDiZ+laJAsNQLDlDmmcQP+C8IqV+lKDizqDNM8uoz0PWkznzkuct+nJ9k0muzKDjnvCMMor+Z2VNJJvjel2NaZ1Z7fyH9Mlu9jrsco0LL045Afw//7icPaa6nQPf9+Kx4MY//4EfoGzObrp2AUxSCfvGj5noK66vEx40YiqVdERrhdfxbIVx/X/tyfEGS7wnHvM8YE9UHMfW1pAGs10InvBbDTW0Zz4z07IDEwyob+suP6gcP+k2XhqDbfsTmBjUMwLW8Ekv3+HEMhiGW+so+DW2gxrwwheLiHpV0xCwzs+OeVW+010O9kgwzXDvhfQPXY68APZJ0xGCYwJrwdOJNcS8WIGuSjNIZb8bQl3hHQlhxhJ5POgl4OsOSX32Aayv2HvsTvyDeYOULXdSAmS2lE2PuVT/AD8GlgP3F54kPeJ9S2z40iDehImBmL5Gfrfe0D+jDxAfYvrLUL8BL3BxD1XSGUYebEx/wqgZSP8DOrp1cC7xAuhRnXqEOf018EHcuhIFY/QBzNguPSzTTAC+YyAtDYL3RjV978gBing9tTDINikKFEKa8qeJ1jVckbcvw5QIdTjINikIF3hsvFm8tPTbDNkHbMhjIWVhmaaZBUajA0jn5U/K0XbTFAK2PQqBDSb5BUajQmrzN7MfEx6Cri9AAO72aulutt/0F+de/lvjdgWkt08tJlnlCCzXepk5xzanfDthusvA8RzPMcqyAtMg8ZGaP+/st1DEWFZqtgWfN4+kzLoOQZpkHYrRQowbWdyz1MzDmaQ0MNLMZSZ0ZG+/VqHFBvmCfJMM82cbSrC2KQgX84hB2e+oHeH6D1U+/xPtPFAUCewP+HNInVMHgpAYGJbV2wBbh4X8BasLgVslmJMAAAAAASUVORK5CYII=","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACsAAAArCAYAAADhXXHAAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAM0SURBVFhHxZlLqE9RGMWvlFcir7HnwPWYKKVEkbmREaUM6FImFAZIeUTIIwZkIIlESRghtwxEiLgD5ZHIK++Q56d12/tad+3vf/a+t3tY9Tv//1nr+/be3c75n8dtMrOmf0wvxysiMWqkj/3VFSfPkhg1spcWC2meJTFqZBYt9KmTZ0mMGhlDi73h5FkSo2a+hMW2Olmkf6h5r5kW1kk/+st+dvLIC6qDOjItrJuoX04GFlMNdJ1zLa6TwbIQzYGqU67FObaZ2TrHL2EeLeKNk6s07/Jio1Y6WQks9t9JNtDp7fJiL5nZD2eyUt6G3ufkHaZFVo6bGBlulQxaQdTXsD+NPEjrO5EYGU6VDtyAqJdm1kL7kNYmJEaGyzT4DCcHa0N+QfzR1Mt67YzhkhgZztAkS5z8WMjwow8NkjzqVfh87IzRkMTIcJImPEL+EPKjrjn9rI1OXkliZFhGk20NHv9+Rs11ekEb1WiWY6YaOZbSZDjZNofvuHxGaQ/D0ixHsxo5JtJkH+k7dM6pV56Fny1omJNX0aJGjgGywKjxTq0HLrNR0528ilY1cqyiyaADTk0VeEKIGufkVZxQIwcfs3edPAdrhZNXcU+NEqK+OVkVw6kXWuDUVJEYJbA0y3Geens7eSPOdmcywNKMOW5mT8Q7VNjLHA31bRqUwNIssjPken9wkXonOH0MLja4JYV+mtknLSiBpRmYHzLvBNxDvbiaaQ42mdmjUPM9fLbfQ2thCSzNplZkYAfl0D7KpsiVMAon8gbU6GAlsNjH2f4h+DedPoAFqX6Huy9PuDvr6NfBSmCV+Eqp1muvDlTCQxowetD98Nns9DDbqV+FB8f9Tk87iVEAL3a5mT2g/d1Ovcdq6oFwrE5y6jqRGAV4wtnb6C1LFWPNbI7juyRGAXhh5knrepzEKCA++0PxreBCp67HwQbCTXUSNkB126npSQ7G79hEjXIKlauhNl5ZIK2pDWyi7mjowE+30GSnpjawYQ3VAgccnxBe/WjWiKp/J80Oj0txv69T0w42eCOCd1jd+qdED7HIzLaY2RozO+3k7STGf2SkmY1w/A4S4x+yKxwC6jfkDxkW88zBWVovAAAAAElFTkSuQmCC","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACcAAAAvCAYAAABg8NNYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAALRSURBVFhHzZhNqE1xFMXfhCkp+ag3UEpEMSApE8pHkQEjCUUGIkyIokxkRAaMGCATBggDXxGRKAMDExMywIRQCFna+h+tt/e6552zz6O76tfrrLX3+e/uO/f87zkDAAb+E2sB7AEwVmSSYPwDJgN4gqgZonYIwRhB9gN4QcP8AvCOjteIniEEYwS4RQP00nrRFwhGkl1+dacPAK4AWCp6exKMlhz0UzidBzBB9DUiGA3YAOCpn4J0FMBW0deaYNSwyU8h9F70pQmG4KafoOgTgI2lZhH5h8U5UgQDwHEA1wB8pwVZJ0TPKVfj8xTBKIMp9fr62wXPWi5qUgSDeFMWWy0y5gcN9kzkaYKRgOWzTgSjJddpsM0i70QwWjCnDGV3/y8ApomaTgSjBV6vRE0ngtGQS24w+8VhWidq0wSjAeNoqM8APtLx9lIzC8A5AIOivzHBaADLjlfR8c7i7SbPbua3AewT56olGMPwmBZ9WLzx5J2l2kPks+zLs0OcOxCMGpa5RSYVfxR5Z0TfVcptP2ZdADBR9PwhGDWwTpI/l/zq01R8ozq7Vlk/RX3j4R7QiV67bDRlF0UvYzfqXrJrc0i9b1bYU1Ilu+H6fD7ld0SuuEs9rC1c55sULJ8Z0yl/K/JeLKE+2e8bPM+p0Z4/fW7spRqTz+uYSj/pT5dz/c19MWNP55UWiLziEdWZfJ4mGIXFtNgYkTP8bzX5PE0wyjCV5olcUemryNIEgxbiu30dK6nH1Gk/ZbxxuSxgW4/PenHDDefzNN6oNu423KPBXoo8TTASbKPhjok8TTAS2HNsJXsV4fM0wUhwhIYz+TxNMBLYflvJnnV9XjFbeLUEI8F9Gm6FyLMMeiMD77/2nsXnaYLRkpk0WCVf04thd59gJGAdEHmaYCTgl4o+60QwWrCw/J1SBrNnBF/TiWAksWvPe50JRj8RjH4iGP1EMPqJ3034gy3XxlV5AAAAAElFTkSuQmCC","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACkAAAAsCAYAAAD4rZFFAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAJASURBVFhH1Zg9jE1BFMdXRSSiQCM+KgVRiGiEEIVCT6Gg0UlUEiIaDQWhoiMSjdCiIRJaDZFQKWSzQkQkKHxFfnJkZnOcc3bvzHvzmP0nv7vv/s69M2fv7rtfU8DUGOjYWjOcqETydiE0mWNrzXCiEskv4EdQa4YTFexfCEfyWGrua89NrlNHsdsmlxc2+QD4BnwHngb1QZyoYNscTa4BLpnae+BZ+nwnGGtenKhgq2riJ7AMeK3cXLHjDOJEBefs7EHuA5eBJ8DJYIwinKjgnu1I5SqwONhnJJyo4KNp7DqwIthubJyoQOd4UG+GExXoHA7qzXCiAp0DQb0ZTlSgczCoN8OJCuTcmLM+qDfDiUJOqAYlO4NtmuFEIfJFkXxJPzcF2zTDiUIWqaMoWR1s0wwnCtlomrT1pjhRiFyPu29SX7eng3pTnChE51VQH2IpsCXwIU4UInfZOXJUbT2zFriZrkj70jU+nxFy5HbO7vcXThTyRk1yN7ntwA1gxpzoS7M3mOcPThTyyM7QIHaOWZyYhyPAFeChHX0gn4EX6V/kGnA+3aXLA9qHtM2OYL5ZnFDsAi6YCYfyEngMnAJWBmOOhBPAITtzSv6tdT4BtyZ1R56RxW7gDPDcNJDfTOjIn84NMmEuykLnnVmX13ryVCiPq/LGwg4waY5KE/LBRh7kb6cvit3pX7IhNyQre1SDm4ON/wengbN53Ra7xIkGLAncWDjRI070iBM94kSPONEjToyAPDla1xRZrLKyN34DxjgCZp2KatcAAAAASUVORK5CYII=","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAtCAYAAADcMyneAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAIESURBVFhHzZZNK0RxFMZtbCjysrOwkqKm2PgAFvgCioWvoCgLsbCxYWGj2ColXwAlWcgHsJCwsrDwkpfsyNHR/1/Hc859mZkz+T/1mzv3eZ47/9PMvXduExE11YjUqZG7oIwqkOo3cheUUZJdGBBzN5RREqklI3dDGSXogwExd0UZJbgXw20YuSvKKKBNDMfC3JsFNIp4F8PtGLk3H2jkMSGGY2HuTXe1i0jdGrk3x9UMGO97X2E7ZnS8eSKiOzSzQPG5iB1PtsM61xhYXMFwUY28xawR0Q0RPWNgITVFRPNiv9Xoe/HJC6CJfIthZN/yvFknonE0JdMwyJbIFoXPJzMe64YyBKi8fNnIXVBG4BwGGDQ6XdDB3AVlENFoWPAtbGeNTmQ1dPi282DkdaOMsGAUf5OYI4eif2LkdYEGCvMspFwfYOXOESykyjns1XFsLnKH9RK2PVgsgdSrkdcEv4wQ0YW4KIawVJI5GPLA6FTDPn8Iv4nyOME3w2fFX+LM6JTlV/HNpVGoFfnUzXo0OqXhlw4066QXBoxqMbqFKMMJPqctDRvdXJThSJZmjG4mynCkgpMJrRh9iwoa3sT/9Sy1G8dIlNEo+HYTxY/y0sPuH5TRYDqJqNnwM1FGaigjNZSRGspIjEk0UqL4Ev9nBniLZnIoIzWUkRrKSA1lpIYyUuMHNIDLG1KyywAAAAAASUVORK5CYII=","data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACQAAAAuCAYAAABAm7v+AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAOjSURBVFhHxZhLqFdVFMalIotw1kBFcBBqNChJy4EOciLqIBAkScGBggYaYg9EHThwYIIoKtRACZxoiUqQAwc6URN8TAwrSvERRJrvMN/6i0/3vqy79jrnnv+95977wW/fc761ztr7nv957H2G8FxPgdnAkAZsB/4I/L7ytwaiDUk7PsHzGjAS2A/sBiYBM4HlwERgMTAXGB0c25RbaqTLwFZgD/AYuJ38vkh1dgLfA3eDzkPU6MCB0E3feYQa6Wfgc+Ak8A9wHLgGfAVMBUYA76SDXgHGAeNdMeUJ1VkALAROpfqP0t+rfgCePCB1UARb4OVU/wpwKW3rOvN5XaiRikBL7Ej1dWayfE431GzyZkvo5+toMELNUG82ZA6wElgPfBDE7c2yK4iHFEbi1fSg1MX5LXDAFK/ST+b41cm7CMwI6lfijV9cJ50q15H2+c6a4I2vXQe6O+47L0tnUP+9ntZjTY0J6Zb3tRtRGAGz/EiAz4K8ViiMgDtuMLqYfU5rFIZhoxuINCXIa5XCSHzhRwIcDPJapzD8KICHZvt0kF+FpKmK92uxO5rPeOmlqtgLwJPkNZk7/QdcSC9VH6slb+x1A9EM0iefN/G3g3gm3wT/pr8+XosaL72VfeKPKaZn0gPg9yDnJVMjP7uGB3m1qJHOAh/5IPCp6USy15PNm2586V5QqxFqxngzoQvSSt6XZn9d8vRUtorOcGMKI+FlY/ktrp/ljMtbEdTqCG/84DrQNNbn/OZypHNBXq/IG2/4HoClLvkt4JBPAj70RfuCmnm+B58EbHFxO/n6FRgWHNMr1FhN9glavLmcKn0cHNsxajZ402Cls3LE7GvxNwq4brz3ghodURiJN00n0l8mlqWfSvtaQlm9G9RrTGGkM2b1nYlpdpil2WT2tQy3ql171WF3XsxfIIw+cQccNjHdcTZ2wsQkzaeKDnsib8x3xfSBoEh2OT5m47q+pD+DnFrU6PrI0lq8SDJY+ZjPsYuD/F2gR3IBfWDQHVMkGKaZDvIFXUWWPl5kHQvyCtS8780K7JlsctHmx4F+Pv0DWYuC3C4KowYpT758rIqjKV8vYa3x7YcwrQF9fjigG8Aa5+kWz9oWHFOH1nX5gao7cS2wuWq+XRjpm6GkgX2T1udSp2fHUzXv6kZhJOzrQMoT/CVBbqsURmKZGYwm/FI0j26dwjBY6Zni4/1CYTg0g1wV+P1GYQw2hTHYFMZgUxgDxOuB94z/Aag29meGoLXyAAAAAElFTkSuQmCC"];
@@ -31,10 +39,14 @@ function cleanComparisonStroke(image) {
 'use strict';
 class ContainerWater {
   constructor(glyphs) {
-    this.glyphs=glyphs;this.a=1.22;this.b=1.38;this.radius=.14;this.fill=.50;
-    this.vertices=[];
-    for(const [cx,cy,start] of [[this.a-this.radius,-this.b+this.radius,-Math.PI/2],[this.a-this.radius,this.b-this.radius,0],[-this.a+this.radius,this.b-this.radius,Math.PI/2],[-this.a+this.radius,-this.b+this.radius,Math.PI]])
-      for(let i=0;i<=12;i++){const t=start+i*Math.PI/24;this.vertices.push([cx+this.radius*Math.cos(t),cy+this.radius*Math.sin(t)]);}
+    this.glyphs=glyphs;this.a=1.22;this.b=1.38;this.radius=0;this.fill=.50;
+    this.inkMetrics=glyphs.map(image=>{
+      const c=document.createElement('canvas');c.width=image.width;c.height=image.height;const x=c.getContext('2d');x.drawImage(image,0,0);
+      const pixels=x.getImageData(0,0,c.width,c.height).data;let bottom=0;
+      for(let y=0;y<c.height;y++)for(let xx=0;xx<c.width;xx++)if(pixels[(y*c.width+xx)*4+3]>64)bottom=Math.max(bottom,y+1);
+      return {bottom:bottom/c.height-.5};
+    });
+    this.vertices=[[-this.a,-this.b],[this.a,-this.b],[this.a,this.b],[-this.a,this.b]];
     this.capacity=this.area(this.vertices);this.volume=this.capacity*this.fill;
     this.h=new Float64Array(65);this.v=new Float64Array(65);this.next=new Float64Array(65);
     this.pose=0;this.poseVelocity=0;this.lastPose=0;this.theta=0;this.phase=0;this.target=0;this.lag=0;this.lagVelocity=0;
@@ -47,6 +59,13 @@ class ContainerWater {
   area(p){let a=0;for(let i=0;i<p.length;i++){const q=p[(i+1)%p.length];a+=p[i][0]*q[1]-q[0]*p[i][1];}return Math.abs(a)/2;}
   smooth(x){x=Math.max(0,Math.min(1,x));return x*x*(3-2*x);}
   wrap(x){return ((x+180)%360+360)%360-180;}
+  get fluidAngle(){return this.pose-this.screenRotation*Math.PI/180;}
+  fluidExtent(){return Math.hypot(this.a,this.b)+.45;}
+  setViewport(width,height,scale){
+    const a=width/(2*scale),b=height/(2*scale);if(Math.abs(a-this.a)<1e-8&&Math.abs(b-this.b)<1e-8)return;
+    this.a=a;this.b=b;this.vertices=[[-a,-b],[a,-b],[a,b],[-a,b]];
+    this.capacity=4*a*b;this.volume=this.capacity*this.fill;this.geometryDirty=true;
+  }
   sample(values,x){const q=Math.max(0,Math.min(64,(x+1)*32)),i=Math.min(63,Math.floor(q));return values[i]+(values[i+1]-values[i])*(q-i);}
   releaseCenter(a){const p=Math.max(0,Math.min(1,(a-92)/88));return -.95+2.9*(.9*p+.1*this.smooth(p));}
   oceanState(){const a=((this.phase%180)+180)%180;
@@ -59,9 +78,9 @@ class ContainerWater {
     const returning=-Math.exp(-(((u-s.returnCenter)/.52)**2))+.23*Math.exp(-(((u-s.returnCenter+.68)/.50)**2));
     return amp*(s.outgoing*forward+s.incoming*returning);}
   disturbance(u){return this.sample(this.h,u/this.span)+this.oceanRipple(u)+this.swell(u);}
-  carrier(u){return this.level+.72*this.sample(this.h,u/this.span)+this.oceanRipple(u);}
-  fluidPoint(u,v){const c=Math.cos(this.pose),s=Math.sin(this.pose);return [c*u+s*v,-s*u+c*v];}
-  fluidCoordinates(x,y){const c=Math.cos(this.pose),s=Math.sin(this.pose);return [c*x-s*y,s*x+c*y];}
+  carrier(u){const swell=this.swell(u);return this.level+.96*this.sample(this.h,u/this.span)+this.oceanRipple(u)+Math.max(0,swell)+.18*Math.min(0,swell);}
+  fluidPoint(u,v){const c=Math.cos(this.fluidAngle),s=Math.sin(this.fluidAngle);return [c*u+s*v,-s*u+c*v];}
+  fluidCoordinates(x,y){const c=Math.cos(this.fluidAngle),s=Math.sin(this.fluidAngle);return [c*x-s*y,s*x+c*y];}
   step(angle,dt) {
     if(!Number.isFinite(angle)||dt<=0)return;
     const target=angle+360*Math.round((this.target-angle)/360),newPose=target*Math.PI/180;
@@ -74,8 +93,8 @@ class ContainerWater {
     this.lastPose=newPose;this.theta=newPose;this.target=target;
     for(let left=Math.min(.08,dt);left>1e-8;){const d=Math.min(left,1/240);left-=d;
       this.motionEnergy+=(moving-this.motionEnergy)*(1-Math.exp(-d/(moving>this.motionEnergy?.15:1.9)));
-      // World gravity is projected immediately into the rotating glass. Inertia lives
-      // in the lagging current and surface tilt, rather than carrying water rigidly with the glass.
+      // World gravity is projected into the screen's rotating local axes. Inertia
+      // belongs to the water field, rather than rigidly rotating it with the screen.
       this.lagVelocity+=(-21*this.lag-3.5*this.lagVelocity)*d;this.lag+=this.lagVelocity*d;
       this.pose=newPose+this.lag;this.poseVelocity=this.lagVelocity;
       this.phase+=(target-this.phase)*(1-Math.exp(-d/.13));
@@ -117,9 +136,9 @@ class ContainerWater {
   }
   surface(u){return this.level+this.disturbance(u);}
   fluidMask(water=true){
-    const p=new Path2D(),extent=3,edge=water?3:-3;
+    const p=new Path2D(),extent=this.fluidExtent(),edge=water?extent:-extent;
     p.moveTo(-extent,edge);p.lineTo(-extent,this.surface(-extent));
-    for(let i=0;i<=200;i++){const u=-extent+2*extent*i/200;p.lineTo(u,this.surface(u));}
+    for(let i=0;i<=256;i++){const u=-extent+2*extent*i/256;p.lineTo(u,this.surface(u));}
     p.lineTo(extent,edge);p.closePath();return p;
   }
   characters(index){
@@ -136,12 +155,15 @@ class ContainerWater {
       // The returning crest lifts each glyph while still covering it. Its receding
       // trailing edge reveals the original ink a little at a time, without opacity changes.
       const progress=outgoing?this.smooth((anchor-crestCenter-.05)/.34):lift;
-      const depth=outgoing?-.27+.88*progress:.61-.88*progress;
+      const image=this.glyphs[base+i],h=(index?.355:.40)*[1,.99,1.02,.98,1.01,1][i],w=h*image.width/image.height;
+      // Anchor the actual lowest pen stroke to the wet edge, rather than centering
+      // a transparent bitmap well above the surface. Follow troughs as they recede.
+      const inkBottom=this.inkMetrics[base+i].bottom,floatDepth=-h*inkBottom+.006;
+      const depth=outgoing?floatDepth+(.61-floatDepth)*progress:.61-(.61-floatDepth)*progress;
       const current=this.sample(this.v,anchor/this.span),u=anchor+Math.max(-.045,Math.min(.045,current*.035));
       const slope=(this.carrier(u+.012)-this.carrier(u-.012))/.024;
       const tilt=Math.max(-.28,Math.min(.28,slope*.65+current*.055));
-      const image=this.glyphs[base+i],h=(index?.355:.40)*[1,.99,1.02,.98,1.01,1][i],w=h*image.width/image.height;
-      return {index,char,image,u,v:this.carrier(u)+depth,h,w,tilt,depth,progress};
+      return {index,char,image,u,v:this.carrier(u)+depth,h,w,tilt,depth,progress,inkBottom,floatDepth};
     });
   }
   prepareText(){
@@ -171,38 +193,29 @@ class ContainerWater {
     }
   }
   containerPath(){const p=new Path2D();this.vertices.forEach(([x,y],i)=>i?p.lineTo(x,y):p.moveTo(x,y));p.closePath();return p;}
-  useFrame(ctx,rotation,scale,cx,cy){const c=Math.cos(rotation)*scale,s=Math.sin(rotation)*scale;ctx.transform(c,s,-s,c,cx,cy);}
-  drawPlane(ctx,image,rotation,scale,cx,cy){ctx.save();this.useFrame(ctx,rotation,scale,cx,cy);ctx.drawImage(image,-this.planeExtent,-this.planeHeight,this.planeExtent*2,this.planeHeight*2);ctx.restore();}
   render(ctx,angle,t,width,height,scale,sensing=false){
-    this.updateLine();this.prepareText();
-    const camera=(sensing?0:this.theta)-this.screenRotation*Math.PI/180,fluidCamera=camera-this.pose;
-    const cx=width*.5,cy=height*.49,glass=this.containerPath();
+    this.setViewport(width,height,scale);this.updateLine();this.prepareText();
+    const fluidCamera=-this.fluidAngle,extent=this.fluidExtent();
     ctx.save();ctx.fillStyle='#000';ctx.fillRect(0,0,width,height);
-    ctx.save();this.useFrame(ctx,camera,scale,cx,cy);
-    const pane=ctx.createLinearGradient(-this.a,-this.b,this.a,this.b);pane.addColorStop(0,'rgba(255,255,255,.07)');pane.addColorStop(.5,'rgba(255,255,255,.015)');pane.addColorStop(1,'rgba(255,255,255,.055)');
-    ctx.fillStyle=pane;ctx.fill(glass);ctx.strokeStyle='rgba(255,255,255,.18)';ctx.lineWidth=.008;ctx.stroke(glass);
-    ctx.clip(glass);
-    // Water uses its own gravity frame, independent of the rotated glass walls.
-    ctx.save();ctx.rotate(-this.pose);
+    // Only fluid coordinates rotate. The viewport, screen walls and interface stay fixed.
+    ctx.translate(width*.5,height*.5);ctx.scale(scale,scale);ctx.clip(this.containerPath());ctx.rotate(fluidCamera);
     const water=this.fluidMask(true);ctx.save();ctx.clip(water);
-    const body=ctx.createLinearGradient(0,this.level,0,2);body.addColorStop(0,'#888');body.addColorStop(.08,'#777');body.addColorStop(.45,'#454545');body.addColorStop(1,'#252525');ctx.fillStyle=body;ctx.fillRect(-3,-3,6,6);
+    const body=ctx.createLinearGradient(0,this.level,0,Math.max(2,this.b));body.addColorStop(0,'#888');body.addColorStop(.08,'#777');body.addColorStop(.45,'#454545');body.addColorStop(1,'#252525');ctx.fillStyle=body;ctx.fillRect(-extent,-extent,2*extent,2*extent);
     // Sparse refracted glints stay inside the very same water mask.
     for(let j=0;j<14;j++){
       const depth=.09+j*.095;ctx.beginPath();
-      for(let i=0;i<=100;i++){const u=-2+i*.04,v=this.surface(u)+depth+.008*Math.sin(u*7-depth*3+t*.25);i?ctx.lineTo(u,v):ctx.moveTo(u,v);}
+      for(let i=0;i<=160;i++){const u=-extent+2*extent*i/160,v=this.surface(u)+depth+.008*Math.sin(u*7-depth*3+t*.25);i?ctx.lineTo(u,v):ctx.moveTo(u,v);}
       ctx.strokeStyle='rgba(255,255,255,'+(.015+.018*Math.max(0,1-j/14))+')';ctx.lineWidth=.002;ctx.stroke();
     }
-    ctx.restore();ctx.restore();ctx.restore();
-    // Clip both reflected and floating text to the interior; the frame is never rotated wholesale.
-    ctx.save();this.useFrame(ctx,camera,scale,cx,cy);ctx.clip(glass);
-    ctx.rotate(-this.pose);
+    ctx.restore();
+    // Both phrases and their reflections share the same physical waterline.
     for(const layer of this.layers)ctx.drawImage(layer.reflection,-this.planeExtent,-this.planeHeight,this.planeExtent*2,this.planeHeight*2);
     for(const layer of this.layers)ctx.drawImage(layer.body,-this.planeExtent,-this.planeHeight,this.planeExtent*2,this.planeHeight*2);
     // A filled, irregular foam lip makes the shared occluding surface easy to follow.
     const foam=new Path2D();
-    for(let i=0;i<=200;i++){const u=-3+i*.03,v=this.surface(u);i?foam.lineTo(u,v):foam.moveTo(u,v);}
+    for(let i=0;i<=256;i++){const u=-extent+2*extent*i/256,v=this.surface(u);i?foam.lineTo(u,v):foam.moveTo(u,v);}
     const energy=this.oceanState().active*(.35+.65*this.motionEnergy);
-    for(let i=200;i>=0;i--){const u=-3+i*.03;foam.lineTo(u,this.surface(u)+.012+energy*(.025+.009*Math.sin(u*29+this.time*.3)));}
+    for(let i=256;i>=0;i--){const u=-extent+2*extent*i/256;foam.lineTo(u,this.surface(u)+.012+energy*(.025+.009*Math.sin(u*29+this.time*.3)));}
     foam.closePath();ctx.fillStyle='#d4d4d4';ctx.fill(foam);
     // Meniscus, foam, text clipping and reflection origins all use the same surface.
     ctx.beginPath();for(let i=0;i<this.line.length;i++){const [u,v]=this.line[i];i?ctx.lineTo(u,v):ctx.moveTo(u,v);}
@@ -211,16 +224,9 @@ class ContainerWater {
     for(let i=0;i<90;i++){const u=-2+i*.045,seed=.5+.5*Math.sin(i*71.21);const depth=.025+seed*seed*(.035+.09*energy);
       ctx.beginPath();ctx.ellipse(u+.007*Math.sin(this.time*.4+i),this.surface(u)+depth,.002+energy*.003,.0015+energy*.002,0,0,Math.PI*2);ctx.fill();}
     ctx.restore();
-    // Front rim, a second inset edge and corner highlights reveal the container's depth.
-    ctx.save();this.useFrame(ctx,camera,scale,cx,cy);
-    ctx.lineWidth=.025;ctx.strokeStyle='rgba(230,230,230,.70)';ctx.stroke(glass);
-    ctx.save();ctx.scale(.966,.971);ctx.lineWidth=.007;ctx.strokeStyle='rgba(255,255,255,.22)';ctx.stroke(glass);ctx.restore();
-    ctx.lineWidth=.012;ctx.strokeStyle='rgba(255,255,255,.6)';
-    for(const sign of [-1,1]){ctx.beginPath();ctx.moveTo(sign*(this.a-.07),-.96);ctx.lineTo(sign*(this.a-.07),-.50);ctx.stroke();}
-    ctx.fillStyle='rgba(255,255,255,.66)';ctx.beginPath();ctx.arc(0,-this.b-.065,.018,0,Math.PI*2);ctx.fill();ctx.restore();ctx.restore();
-    this.lastView={camera,fluidCamera,sensing};
+    this.lastView={camera:0,fluidCamera,sensing,screenWalls:true,width,height};
   }
-  diagnostics(){this.updateLine();const wave=Math.sqrt(this.h.reduce((sum,x)=>sum+x*x,0)/65),speed=Math.sqrt(this.v.reduce((sum,x)=>sum+x*x,0)/65);return {angle:this.target,phase:this.phase,gravityContainer:[Math.sin(this.theta),Math.cos(this.theta)],pose:this.pose,poseVelocity:this.poseVelocity,wave,speed,volume:this.volume,measuredVolume:this.measuredVolume,relativeVolumeError:Math.abs(this.measuredVolume-this.volume)/this.volume,waterline:this.line.map(p=>p.slice()),view:this.lastView};}
+  diagnostics(){this.updateLine();const wave=Math.sqrt(this.h.reduce((sum,x)=>sum+x*x,0)/65),speed=Math.sqrt(this.v.reduce((sum,x)=>sum+x*x,0)/65),gravity=this.theta-this.screenRotation*Math.PI/180;return {angle:this.target,phase:this.phase,gravityContainer:[Math.sin(gravity),Math.cos(gravity)],pose:this.pose,poseScreen:this.fluidAngle,poseVelocity:this.poseVelocity,wave,speed,volume:this.volume,measuredVolume:this.measuredVolume,relativeVolumeError:Math.abs(this.measuredVolume-this.volume)/this.volume,waterline:this.line.map(p=>p.slice()),screenWalls:{left:-this.a,right:this.a,top:-this.b,bottom:this.b},view:this.lastView};}
 }
 
 'use strict';
@@ -239,7 +245,7 @@ function advancePreview(dt){
 const screenAngle=()=>screen.orientation?.angle??window.orientation??0;
 let screenBase=screenAngle();
 function syncScreenFrame(){if(sea)sea.screenRotation=screenAngle()-screenBase;resize();}
-function resize(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);width=r.width;height=r.height;canvas.width=Math.round(width*d);canvas.height=Math.round(height*d);ctx.setTransform(d,0,0,d,0,0);scale=Math.min(width,height)*.46/Math.hypot(1.22,1.38);}
+function resize(){const r=canvas.getBoundingClientRect(),d=Math.min(devicePixelRatio||1,2);width=r.width;height=r.height;canvas.width=Math.round(width*d);canvas.height=Math.round(height*d);ctx.setTransform(d,0,0,d,0,0);scale=Math.min(width*.43,height*.30);}
 new ResizeObserver(resize).observe(canvas);
 function render(t=clock){if(ready)sea.render(ctx,angle,t,width,height,scale,sensing);}
 function setPlaying(on){if(on&&!playing){previewHold=norm(angle)<.25?1600:0;previewElapsed=previewHold?0:2800;}playing=on;$('play').textContent=on?'暫停':'播放預覽';$('play').setAttribute('aria-pressed',on)}

@@ -1,10 +1,10 @@
 {
-  "title": "為你好 · 比較｜容器浮沉版",
+  "title": "為你好 · 比較｜滿版水面（螢幕容器）",
   "entry": "index.html",
   "source": "比較-容器浮沉版.html",
-  "bytes": 41208,
-  "sha256": "56e18c65eab8c730fb310527c405283154eeaf5d4bc7cba48cef900cf83b7a69",
+  "bytes": 42079,
+  "sha256": "1f977963322a67ff5c92bd8fd513c0d4505b7dc612b51801689bda25f67a6a53",
   "standalone": true,
   "externalAssets": [],
-  "notes": "直接複製目前最新的容器浮沉版；保留回浪吐字、淺倒影、手機旋轉及角度控制。"
+  "notes": "手機螢幕四邊即容器壁，沒有畫面內的水槽或玻璃框；保留回浪吐字、淺倒影、手機旋轉及角度控制。"
 }
